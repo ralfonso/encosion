@@ -53,8 +53,9 @@ module Encosion
       
 
       # Performs an HTTP GET
-      def get(server,port,secure,path,command,options)
+      def get(server,port,secure,path,timeout,command,options)
         http = HTTPClient.new
+        http.receive_timeout = timeout
         url = secure ? 'https://' : 'http://'
         url += "#{server}:#{port}#{path}"
         
@@ -75,8 +76,9 @@ module Encosion
       
       
       # Performs an HTTP POST
-      def post(server,port,secure,path,command,options,instance)
+      def post(server,port,secure,path,timeout,command,options,instance)
         http = HTTPClient.new
+        http.send_timeout = timeout
         url = secure ? 'https://' : 'http://'
         url += "#{server}:#{port}#{path}"
         

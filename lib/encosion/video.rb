@@ -138,6 +138,7 @@ module Encosion
               Encosion.options[:port],
               Encosion.options[:secure],
               Encosion.options[:read_path],
+              Encosion.options[:read_timeout],
               method,
               options)
       end
@@ -151,6 +152,7 @@ module Encosion
                     Encosion.options[:port],
                     Encosion.options[:secure],
                     Encosion.options[:write_path],
+                    Encosion.options[:send_timeout],
                     method,
                     options,
                     self)
@@ -246,6 +248,7 @@ module Encosion
                             Encosion.options[:port],
                             Encosion.options[:secure],
                             Encosion.options[:write_path],
+                            Encosion.options[:send_timeout],
                             'create_video',
                             options,
                             self)

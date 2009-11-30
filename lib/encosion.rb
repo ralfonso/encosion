@@ -1,6 +1,7 @@
 $:.unshift File.dirname(__FILE__) # for use/testing when no gem is installed
 
 # external
+require 'rubygems'
 require 'net/http'
 require 'net/https'
 require 'uri'
@@ -17,7 +18,7 @@ require 'encosion/exceptions'
 
 module Encosion
   
-  VERSION = '0.3.0'
+  VERSION = '0.3.1'
   LOGGER = Logger.new(STDOUT)
   
   SERVER = 'api.brightcove.com'
@@ -33,7 +34,9 @@ module Encosion
                 :port => PORT, 
                 :secure => SECURE, 
                 :read_path => READ_PATH, 
-                :write_path => WRITE_PATH }
+                :write_path => WRITE_PATH,
+                :send_timeout => 120,
+                :receive_timeout => 60 }
   attr_accessor :options
   
   # make @options available so it can be set externally when using the library
