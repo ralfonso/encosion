@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["The Active Network"]
   s.date = %q{2009-11-30}
-  s.email = %q{cannikinn@gmail.com}
+  s.email = %q{rob.cameron@active.com}
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
