@@ -63,8 +63,9 @@ module Encosion
         query_string = options.collect { |key,value| "#{key.to_s}=#{value.to_s}" }.join('&')
         
         response = http.get(url, query_string)
-        
-        body = response.body.content.strip == 'null' ? nil : JSON.parse(response.body.content.strip)   # if the call returns 'null' then there were no valid results
+
+        res_body = response.body.class == String ? response.body : response.body.content
+        body = res_body.strip == 'null' ? nil : JSON.parse(res_body.strip)   # if the call returns 'null' then there were no valid results
         header = response.header
         
         error_check(header,body)
@@ -83,11 +84,14 @@ module Encosion
         url += "#{server}:#{port}#{path}"
         
         content = { 'json' => { 'method' => command, 'params' => options }.to_json }    # package up the variables as a JSON-RPC string
+
+        puts 'pre file content: ' + content.to_json
         content.merge!({ 'file' => instance.file }) if instance.respond_to?('file')             # and add a file if there is one
 
         response = http.post(url, content)
         # get the header and body for error checking
-        body = JSON.parse(response.body.content.strip)
+        res_body = response.body.class == String ? response.body : response.body.content
+        body = JSON.parse(res_body.strip)
         header = response.header
 
         error_check(header,body)
