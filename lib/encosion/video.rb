@@ -2,6 +2,7 @@ module Encosion
   
   # Raised if you try to set an invalid economics value
   class InvalidEconomicsValue < StandardError; end;
+  class InvalidVideoId < StandardError; end;
   
   class Video < Base
     
@@ -123,7 +124,11 @@ module Encosion
         end
         
         if response = write('get_upload_status',options)
-          return response['result'].downcase.to_sym
+          if response['result']
+            return response['result'].downcase.to_sym
+          elsif response['name'] and response['name'] == 'IllegalValueError'
+            raise InvalidVideoId, response['message'] or 'Could not find video'
+          end
         else
           return nil
         end
