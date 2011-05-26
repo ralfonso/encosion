@@ -19,6 +19,11 @@ module Encosion
   
   # Raised when Brightcove doesn't like the call that was made for whatever reason
   class BrightcoveException < EncosionError
+      attr_accessor :code
+
+      def initialize(code=nil)
+          self.code = code
+      end
   end
   
   # Raised when Brightcove doesn't like the call that was made for whatever reason
@@ -85,7 +90,7 @@ module Encosion
         
         content = { 'json' => { 'method' => command, 'params' => options }.to_json }    # package up the variables as a JSON-RPC string
 
-        puts 'pre file content: ' + content.to_json
+        #puts 'pre file content: ' + content.to_json
         content.merge!({ 'file' => instance.file }) if instance.respond_to?('file')             # and add a file if there is one
 
         response = http.post(url, content)
@@ -104,17 +109,13 @@ module Encosion
       def error_check(header,body)
         if header.status_code == 200
           return true if body.nil?
-          puts body['error']
-          if body.has_key? 'error' && !body['error'].nil?
-            message = "Brightcove responded with an error: #{body['error']} (code #{body['code']})"
-            body['errors'].each do |error| 
-              message += "\n#{error.values.first} (code #{error.values.last})"
-            end if body.has_key? 'errors'
-            raise BrightcoveException, message
+          if body['error']
+            message = "Brightcove responded with an error: #{body['error']['message']} (code #{body['error']['code']})"
+            raise BrightcoveException.new(body['error']['code']), message
           end
         else
           # should only happen if the Brightcove API is unavailable (even BC errors return a 200)
-          raise BrightcoveException, body + " (status code: #{header.status_code})"
+          raise BrightcoveException.new(header.status_code), body + " (status code: #{header.status_code})"
         end
       end
       
